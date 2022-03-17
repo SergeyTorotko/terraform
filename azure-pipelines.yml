@@ -1,0 +1,22 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+
+steps:
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)/terraform'
+  inputs:
+    Contents:  |
+      **/modules/**
+      main.tf
+      variables.tf
+      terraform.tfvars
+    TargetFolder: '$(build.artifactstagingdirectory)/terraform'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/terraform'    
