@@ -17,6 +17,7 @@ variable "postgresql-sku-name" {
   description = "PostgreSQL SKU Name"
 }
 variable "postgresql-storage" {
+  type = string
   description = "PostgreSQL Storage in MB"
 }
 variable "rgname" {
