@@ -20,7 +20,7 @@ module "app-service-plan" {
   app_plan_kind = "${var.app_plan_kind}"
   sku_size      = "${var.sku_size}"
   sku_tier      = "${var.sku_tier}"
-  reserved      = "${var.reserved}"
+  reserved      = true
   location      = "${var.location}"
 }
 
@@ -39,7 +39,7 @@ module "postgreSQL" {
   location                  = "${var.location}"
   rgname                    = "${var.rgname}"
   postgresql-sku-name       = "${var.postgresql-sku-name}"
-  postgresql-storage        = "${var.postgresql-storage}"
+  postgresql-storage        = 32768
   postgresql-version        = "${var.postgresql-version}" 
   postgresql-server-name    = "${var.postgresql-server-name}"
   postgresql-database-name  = "${var.postgresql-database-name}"
