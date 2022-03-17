@@ -16,6 +16,7 @@ terraform -chdir="./modules/user db" init
 3. - 1.  - 1ч 
 4. - 2.  - 3ч
 5. - 5.  - 2ч
+<<<<<<< HEAD
 6. - 3.4  - 5ч
 
 rgname                    = "#{ResourceGroupName}#"
@@ -35,3 +36,6 @@ collation                 = "#{DBCollation}#"
 postgresql-version        = "#{PostgreSQlVersion}#"
 postgresql-sku-name       = "#{PostgreSQlSKUName}#"
 postgresql-storage        = "#{PostgreSQlStorage}#"
+=======
+6. - 3.4  - 5ч
+>>>>>>> f2e0f17b2636101ae8752369199fcda56be5d80c
