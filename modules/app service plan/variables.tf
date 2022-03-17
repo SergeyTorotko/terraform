@@ -17,5 +17,6 @@ variable "sku_size" {
   description = "SKU size of App Service Plan"
 }
 variable "reserved" {
+  type = string
   description = "Reserved of App Service Plan"
 }
