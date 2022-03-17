@@ -6,13 +6,6 @@ terraform {
     }
     
   }
-  backend "azurerm" {
-    resource_group_name  = "node-app"
-    storage_account_name = "tfstatestore2134"
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
-  }
-
 }
 provider "azurerm" {
   features {}
