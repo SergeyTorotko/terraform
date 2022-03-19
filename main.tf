@@ -30,7 +30,6 @@ module "app-service" {
   rgname           = "${var.rgname}"
   location         = "${var.location}"
   plan_id          = module.app-service-plan.app_service_plan_id
- 
 }
 #Create PostgreSQl Server & Database
 module "postgreSQL" {
