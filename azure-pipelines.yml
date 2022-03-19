@@ -15,10 +15,8 @@ steps:
       variables.tf
       terraform.tfvars
     TargetFolder: '$(build.artifactstagingdirectory)/terraform'
-
 - task: TerraformInstaller@0
-  inputs:
-    terraformVersion: 'latest'
+  displayName: 'Install Terraform latest'
 - task: TerraformTaskV2@2
   inputs:
     provider: 'azurerm'
