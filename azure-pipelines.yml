@@ -16,6 +16,25 @@ steps:
       terraform.tfvars
     TargetFolder: '$(build.artifactstagingdirectory)/terraform'
 
+- task: TerraformInstaller@0
+  inputs:
+    terraformVersion: 'latest'
+- task: TerraformTaskV2@2
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(build.artifactstagingdirectory)/terraform'
+    backendServiceArm: 'Azure subscription 1(1)(5ccd862b-7710-4536-85dd-a425a1b28173)'
+    backendAzureRmResourceGroupName: 'test-terraform'
+    backendAzureRmStorageAccountName: 'qwer134214nn'
+    backendAzureRmContainerName: 'tfstate'
+    backendAzureRmKey: 'terraform.tfstate'    
+- task: TerraformTaskV2@2
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: '$(build.artifactstagingdirectory)/terraform'
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
   inputs:
