@@ -23,6 +23,10 @@ steps:
   inputs:
     terraformVersion: '1.1.7' 
 
+- task: TerraformCLI@0
+  inputs:
+    command: 'init'
+    allowTelemetryCollection: true
 - task: TerraformTaskV2@2
   displayName: 'terraform validate'
   inputs:
