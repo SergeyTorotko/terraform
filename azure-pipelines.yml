@@ -27,9 +27,8 @@ steps:
   inputs:
     command: 'init'
     allowTelemetryCollection: true
-- task: TerraformTaskV2@2
-  displayName: 'terraform validate'
+- task: TerraformCLI@0
   inputs:
-    provider: 'azurerm'
     command: 'validate'
-    workingDirectory: '$(build.artifactstagingdirectory)/terraform'
+    allowTelemetryCollection: true
+
