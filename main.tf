@@ -20,8 +20,8 @@ module "app-service-plan" {
   sku_size      = "${var.sku_size}"
   sku_tier      = "${var.sku_tier}"
   reserved      = "${var.reserved}"
-  location      = "${var.location}"
-}
+  location      = "${var.location}
+
 
 #Create App Service
 module "app-service" {
