@@ -1,0 +1,7 @@
+rgname                    = "#{ResourceGroupName}#"
+plan_name                 = "#{AppPlanName}#"
+app_plan_kind             = "#{AppPlanKind}#"
+sku_size                  = "#{AppPlanSkuSize}#"
+sku_tier                  = "#{AppPlanSkuTire}#"
+reserved                  = "#{AppPlanReserved}#"
+location                  = "#{LocationResources}#"
