@@ -1,0 +1,17 @@
+variable "rgname" {}
+variable "location" {}
+variable "app_name" {}
+variable "plan_name" {}
+variable "app_plan_kind" {}
+variable "sku_tier" {}
+variable "sku_size" {}
+variable "reserved" {}
+variable "postgresql-server-name" {}
+variable "postgresql-database-name" {}
+variable "postgresql-admin-login" {}
+variable "postgresql-admin-password" {}
+variable "postgresql-version" {}
+variable "postgresql-sku-name" {}
+variable "postgresql-storage" {}
+variable "charset" {}
+variable "collation" {}
