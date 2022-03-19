@@ -1,6 +1,10 @@
-trigger:
-- main
-
+trigger: none
+pr:
+  branches:
+    include:
+      - "*"
+  drafts: false
+  
 pool:
   vmImage: ubuntu-latest
 
