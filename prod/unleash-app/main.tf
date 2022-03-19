@@ -4,13 +4,13 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~>2.98.0"
     }
+  }
   backend "azurerm" {
     resource_group_name  = "test-terraform"
     storage_account_name = "qwer134214nn"
     container_name       = "tfstate"
     key                  = "prod/unleash-app/terraform.tfstate"
   }   
-  }
 }
 
 provider "azurerm" {
