@@ -27,3 +27,8 @@ steps:
     inputs:
       command: "validate"
       allowTelemetryCollection: false
+
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: drop"
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)/terraform"
