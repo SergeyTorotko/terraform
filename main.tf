@@ -9,7 +9,6 @@ terraform {
 }
 provider "azurerm" {
   features {}
-
 }
 
 #Create App Service Plan
