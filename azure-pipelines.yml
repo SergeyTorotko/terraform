@@ -24,6 +24,7 @@ steps:
   terraformVersion: '1.1.6'
 
 - task: TerraformTaskV2@2
+  displayName: 'terraform init'
   inputs:
     provider: 'azurerm'
     command: 'init'
@@ -35,6 +36,7 @@ steps:
     backendAzureRmKey: 'terraform.tfstate'    
 
 - task: TerraformTaskV2@2
+  displayName: 'terraform validate'
   inputs:
     provider: 'azurerm'
     command: 'validate'
