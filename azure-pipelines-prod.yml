@@ -32,3 +32,8 @@ steps:
     displayName: "Publish Artifact: drop"
     inputs:
       PathtoPublish: "$(Build.ArtifactStagingDirectory)/terraform"
+
+  - task: TerraformTaskV2@2
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
