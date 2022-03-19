@@ -24,7 +24,7 @@ steps:
     inputs:
       command: "init"
       allowTelemetryCollection: false
-      
+
   - task: TerraformCLI@0
     inputs:
       command: "validate"
