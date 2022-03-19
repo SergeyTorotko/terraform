@@ -1,5 +1,5 @@
 trigger:
-  - develop
+  - main
 
 pool:
   vmImage: ubuntu-latest
@@ -10,7 +10,7 @@ steps:
     inputs:
       Contents: |
         **/modules/**
-        **/review/**
+        **/prod/**
       TargetFolder: "$(build.artifactstagingdirectory)/terraform"
 
   - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
@@ -27,8 +27,3 @@ steps:
     inputs:
       command: "validate"
       allowTelemetryCollection: false
-
-  - task: PublishBuildArtifacts@1
-    displayName: "Publish Artifact: drop"
-    inputs:
-      PathtoPublish: "$(Build.ArtifactStagingDirectory)/terraform"
