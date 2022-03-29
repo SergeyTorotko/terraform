@@ -99,7 +99,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        chmod -R a+x /.terraform/plugins/linux_amd64/*
+        chmod -R a+x ./.terraform/providers/*
       workingDirectory: '$(System.ArtifactsDirectory)/plan/drop/review/unleash-app/'
   - task: TerraformTaskV2@2
     inputs:
