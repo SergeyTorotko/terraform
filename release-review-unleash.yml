@@ -70,6 +70,11 @@ jobs:
       workingDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
       commandOptions: '-out=tfplan -input=false'
       environmentServiceNameAzureRM: 'Azure subscription 1(5ccd862b-7710-4536-85dd-a425a1b28173)'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'plan'
+      publishLocation: 'Container'
 - job: waitForValidation
   pool: server
   displayName: Wait for external validation  
@@ -82,13 +87,20 @@ jobs:
             v.dedyulya@itransition.com
         instructions: 'Please validate the build configuration and resume'
         onTimeout: 'reject'
+  dependsOn: Plan
 - job: Deploy
   steps:
+  - task: DownloadBuildArtifacts@1
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: 'plan'
+      downloadPath: '$(System.ArtifactsDirectory)'
   - task: TerraformTaskV2@2
     inputs:
       provider: 'azurerm'
       command: 'apply'
-      workingDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
+      workingDirectory: '$(System.ArtifactsDirectory)/plan'
       commandOptions: '-input=false tfplan'
       environmentServiceNameAzureRM: 'Azure subscription 1(5ccd862b-7710-4536-85dd-a425a1b28173)'
   dependsOn: waitForValidation
