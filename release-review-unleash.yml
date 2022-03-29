@@ -95,20 +95,12 @@ jobs:
       downloadType: 'single'
       artifactName: 'plan'
       downloadPath: '$(System.ArtifactsDirectory)'
-  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-    displayName: "Install terraform"
+  - task: Bash@3
     inputs:
-      terraformVersion: "1.1.7"
-  - task: TerraformTaskV2@2
-    inputs:
-      provider: 'azurerm'
-      command: 'init'
-      workingDirectory: '$(System.ArtifactsDirectory)/plan/drop/review/unleash-app'
-      backendServiceArm: '$(backendServiceArm)'
-      backendAzureRmResourceGroupName: '$(backendAzureRmResourceGroupName)'
-      backendAzureRmStorageAccountName: '$(backendAzureRmStorageAccountName)'
-      backendAzureRmContainerName: '$(backendAzureRmContainerName)'
-      backendAzureRmKey: '$(backendAzureRmKey)'
+      targetType: 'inline'
+      script: |
+        chmod -R a+x ./.terraform/plugins/linux_amd64/*
+      workingDirectory: '$(System.ArtifactsDirectory)/plan/drop/review/unleash-app/'
   - task: TerraformTaskV2@2
     inputs:
       provider: 'azurerm'
