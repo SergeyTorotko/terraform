@@ -70,10 +70,13 @@ stages:
           provider: 'azurerm'
           command: 'plan'
           workingDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
+          commandOptions: '-out=tfplan -input=false'
           environmentServiceNameAzureRM: 'Azure subscription 1(5ccd862b-7710-4536-85dd-a425a1b28173)'
  - stage: Deploy
+   dependsOn: Plan
+   condition: succeeded('Plan')
    jobs:
-   - job: waitForValidation
+   - job: Deploy
      displayName: Wait for external validation  
      pool: server    
      timeoutInMinutes: 4320 # job times out in 3 days
@@ -84,4 +87,11 @@ stages:
             notifyUsers: |
                 v.dedyulya@itransition.com
             instructions: 'Please validate the build configuration and resume'
-            onTimeout: 'resume'
+            onTimeout: 'reject'
+      - task: TerraformTaskV2@2
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          workingDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
+          commandOptions: '-input=false tfplan'
+          environmentServiceNameAzureRM: 'Azure subscription 1(5ccd862b-7710-4536-85dd-a425a1b28173)'
