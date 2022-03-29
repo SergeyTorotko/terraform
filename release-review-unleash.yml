@@ -1,10 +1,10 @@
-trigger: none
+# trigger: none
 
-resources:
- pipelines:
-   - pipeline: terra-review-ci
-     source: terra-review
-     trigger: true
+# resources:
+#  pipelines:
+#    - pipeline: terra-review-ci
+#      source: terra-review
+#      trigger: true
 
 
 variables:
