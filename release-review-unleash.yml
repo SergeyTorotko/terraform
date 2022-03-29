@@ -71,13 +71,13 @@ jobs:
       workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
       commandOptions: '-out=tfplan -input=false'
       environmentServiceNameAzureRM: '$(backendServiceArm)'
-  - publish: $(System.DefaultWorkingDirectory)
-    artifact: unleash-dev-plan
-  # - task: PublishBuildArtifacts@1
-  #   inputs:
-  #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-  #     ArtifactName: 'unleash-dev-plan'
-  #     publishLocation: 'Container'
+  # - publish: $(System.DefaultWorkingDirectory)
+  #   artifact: unleash-dev-plan
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'unleash-dev-plan'
+      publishLocation: 'Container'
 
 - job: waitForValidation
   pool: server
