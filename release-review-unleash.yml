@@ -100,7 +100,7 @@ jobs:
     inputs:
       provider: 'azurerm'
       command: 'apply'
-      workingDirectory: '$(System.ArtifactsDirectory)/plan'
+      workingDirectory: '$(System.ArtifactsDirectory)/plan/drop/review/unleash-app/'
       commandOptions: '-input=false tfplan'
       environmentServiceNameAzureRM: 'Azure subscription 1(5ccd862b-7710-4536-85dd-a425a1b28173)'
   dependsOn: waitForValidation
