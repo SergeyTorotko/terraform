@@ -103,23 +103,23 @@ jobs:
   #     downloadType: 'single'
   #     artifactName: 'plan'
   #     downloadPath: '$(System.ArtifactsDirectory)'
-  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-    displayName: "Install terraform"
-    inputs:
-      terraformVersion: "1.1.7"
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        chmod -R a+x ./.terraform/providers/*
-      workingDirectory: '$(PIPELINE.WORKSPACE)/plan/terraform-review-ci/drop/review/unleash-app'
-  - task: TerraformTaskV2@2
-    inputs:
-      provider: 'azurerm'
-      command: 'apply'
-      workingDirectory: '$(PIPELINE.WORKSPACE)/plan/terraform-review-ci/drop/review/unleash-app'
-      commandOptions: '-input=false tfplan'
-      environmentServiceNameAzureRM: '$(backendServiceArm)'
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+      displayName: "Install terraform"
+      inputs:
+        terraformVersion: "1.1.7"
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          chmod -R a+x ./.terraform/providers/*
+        workingDirectory: '$(PIPELINE.WORKSPACE)/plan/terraform-review-ci/drop/review/unleash-app'
+    - task: TerraformTaskV2@2
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(PIPELINE.WORKSPACE)/plan/terraform-review-ci/drop/review/unleash-app'
+        commandOptions: '-input=false tfplan'
+        environmentServiceNameAzureRM: '$(backendServiceArm)'
   dependsOn: waitForValidation
   # dependsOn: Plan
   condition: succeeded()  
