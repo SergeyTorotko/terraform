@@ -1,10 +1,11 @@
-# trigger: none
-
-# resources:
-#  pipelines:
-#    - pipeline: terra-review-ci
-#      source: terra-review
-#      trigger: true
+resources:
+ pipelines:
+   - pipeline: terra-review-ci
+     source: terra-review
+     trigger:
+      branches:
+        include:
+          - develop
 
 
 variables:
@@ -106,7 +107,7 @@ jobs:
       provider: 'azurerm'
       command: 'apply'
       workingDirectory: '$(System.ArtifactsDirectory)/plan/drop/review/unleash-app/'
-      commandOptions: '-input=false tfplan -auto-approve'
+      commandOptions: 'tfplan -auto-approve'
       environmentServiceNameAzureRM: 'Azure subscription 1(5ccd862b-7710-4536-85dd-a425a1b28173)'
   dependsOn: waitForValidation
   condition: succeeded()  
