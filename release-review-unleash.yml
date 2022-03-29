@@ -17,18 +17,18 @@ pool:
 jobs:
 - job: Plan
   steps:
-  - download: terra-review-ci
-    artifact: drop
-  # - task: DownloadBuildArtifacts@1
-  #   inputs:
-  #     buildType: 'specific'
-  #     project: 'df19d7ad-38d0-4f00-bfe3-4fab0e053dba'
-  #     pipeline: '13'
-  #     specificBuildWithTriggering: true
-  #     buildVersionToDownload: 'latest'
-  #     downloadType: 'single'
-  #     artifactName: 'drop'
-  #     downloadPath: '$(System.ArtifactsDirectory)'
+  # - download: terra-review-ci
+  #   artifact: drop
+  - task: DownloadBuildArtifacts@1
+    inputs:
+      buildType: 'specific'
+      project: 'df19d7ad-38d0-4f00-bfe3-4fab0e053dba'
+      pipeline: '13'
+      specificBuildWithTriggering: true
+      buildVersionToDownload: 'latest'
+      downloadType: 'single'
+      artifactName: 'drop'
+      downloadPath: '$(System.ArtifactsDirectory)'
   - task: replacetokens@5
     inputs:
       rootDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
@@ -70,6 +70,7 @@ jobs:
       workingDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
       commandOptions: '-out=tfplan -input=false'
       environmentServiceNameAzureRM: 'Azure subscription 1(5ccd862b-7710-4536-85dd-a425a1b28173)'
+  - publish: 
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
