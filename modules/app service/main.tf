@@ -3,7 +3,4 @@ resource "azurerm_app_service" "app" {
   resource_group_name = var.rgname
   location            = var.location
   app_service_plan_id = var.plan_id
-
- 
-
 }
