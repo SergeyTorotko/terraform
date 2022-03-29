@@ -40,7 +40,7 @@ module "app_service" {
 
 #Create PostgreSQl Server & Database
 module "postgreSQL" {
-  source                    = "../../modules/postgresql-flexible"
+  source                    = "../../modules/postgresql"
   location                  = var.location
   rgname                    = var.rgname
   postgresql_sku_name       = var.postgresql_sku_name
