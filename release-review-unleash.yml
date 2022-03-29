@@ -45,7 +45,6 @@ jobs:
     displayName: "Install terraform"
     inputs:
       terraformVersion: "1.1.7"
-
   - task: TerraformTaskV2@2
     inputs:
       provider: 'azurerm'
@@ -56,13 +55,11 @@ jobs:
       backendAzureRmStorageAccountName: '$(backendAzureRmStorageAccountName)'
       backendAzureRmContainerName: '$(backendAzureRmContainerName)'
       backendAzureRmKey: '$(backendAzureRmKey)'
-
   - task: TerraformTaskV2@2
     inputs:
       provider: 'azurerm'
       command: 'validate'
       workingDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
-
   - task: TerraformTaskV2@2
     inputs:
       provider: 'azurerm'
@@ -75,6 +72,7 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'plan'
       publishLocation: 'Container'
+
 - job: waitForValidation
   pool: server
   displayName: Wait for external validation  
@@ -88,6 +86,7 @@ jobs:
         instructions: 'Please validate the build configuration and resume'
         onTimeout: 'reject'
   dependsOn: Plan
+
 - job: Deploy
   steps:
   - task: DownloadBuildArtifacts@1
@@ -101,7 +100,7 @@ jobs:
       provider: 'azurerm'
       command: 'apply'
       workingDirectory: '$(System.ArtifactsDirectory)/plan/drop/review/unleash-app/'
-      commandOptions: '-input=false tfplan'
+      commandOptions: '-input=false tfplan -auto-approve'
       environmentServiceNameAzureRM: 'Azure subscription 1(5ccd862b-7710-4536-85dd-a425a1b28173)'
   dependsOn: waitForValidation
   condition: succeeded()   
