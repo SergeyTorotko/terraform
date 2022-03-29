@@ -74,19 +74,19 @@ jobs:
       ArtifactName: 'plan'
       publishLocation: 'Container'
 
-- job: waitForValidation
-  pool: server
-  displayName: Wait for external validation  
-  timeoutInMinutes: 4320 # job times out in 3 days
-  steps:   
-  - task: ManualValidation@0
-    timeoutInMinutes: 1440 # task times out in 1 day
-    inputs:
-        notifyUsers: |
-            v.dedyulya@itransition.com
-        instructions: 'Please validate the build configuration and resume'
-        onTimeout: 'reject'
-  dependsOn: Plan
+# - job: waitForValidation
+#   pool: server
+#   displayName: Wait for external validation  
+#   timeoutInMinutes: 4320 # job times out in 3 days
+#   steps:   
+#   - task: ManualValidation@0
+#     timeoutInMinutes: 1440 # task times out in 1 day
+#     inputs:
+#         notifyUsers: |
+#             v.dedyulya@itransition.com
+#         instructions: 'Please validate the build configuration and resume'
+#         onTimeout: 'reject'
+#   dependsOn: Plan
 
 - job: Deploy
   steps:
@@ -107,7 +107,7 @@ jobs:
       provider: 'azurerm'
       command: 'apply'
       workingDirectory: '$(System.ArtifactsDirectory)/plan/drop/review/unleash-app/'
-      commandOptions: 'tfplan -auto-approve'
+      commandOptions: '-input=false tfplan'
       environmentServiceNameAzureRM: 'Azure subscription 1(5ccd862b-7710-4536-85dd-a425a1b28173)'
   dependsOn: waitForValidation
   condition: succeeded()  
