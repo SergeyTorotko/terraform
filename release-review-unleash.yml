@@ -11,7 +11,7 @@ variables:
 - group: 'terraform.prod.unleash'
 
 pool:
-  name: ubuntu-latest
+  vmImage: ubuntu-latest
 
 steps:
 - task: DownloadBuildArtifacts@1
