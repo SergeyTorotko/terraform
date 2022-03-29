@@ -103,7 +103,7 @@ jobs:
     inputs:
       provider: 'azurerm'
       command: 'init'
-      workingDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
+      workingDirectory: '$(System.ArtifactsDirectory)/plan/drop/review/unleash-app'
       backendServiceArm: '$(backendServiceArm)'
       backendAzureRmResourceGroupName: '$(backendAzureRmResourceGroupName)'
       backendAzureRmStorageAccountName: '$(backendAzureRmStorageAccountName)'
