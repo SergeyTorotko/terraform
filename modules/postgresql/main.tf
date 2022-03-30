@@ -10,6 +10,7 @@ resource "azurerm_postgresql_flexible_server" "postgresql_server" {
   sku_name   = var.postgresql_sku_name
   version    = var.postgresql_version
   storage_mb = var.postgresql_storage
+  zone = "2"
 
   lifecycle {
     prevent_destroy = true
