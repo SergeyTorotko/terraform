@@ -19,16 +19,6 @@ jobs:
   steps:
   - download: terraform-review-ci
     artifact: drop
-  # - task: DownloadBuildArtifacts@1
-  #   inputs:
-  #     buildType: 'specific'
-  #     project: 'df19d7ad-38d0-4f00-bfe3-4fab0e053dba'
-  #     pipeline: '13'
-  #     specificBuildWithTriggering: true
-  #     buildVersionToDownload: 'latest'
-  #     downloadType: 'single'
-  #     artifactName: 'drop'
-  #     downloadPath: '$(System.ArtifactsDirectory)'
   - task: replacetokens@5
     inputs:
       # rootDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
@@ -71,13 +61,13 @@ jobs:
       workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
       commandOptions: '-out=tfplan -input=false'
       environmentServiceNameAzureRM: '$(backendServiceArm)'
-  # - publish: $(System.DefaultWorkingDirectory)
-  #   artifact: unleash-dev-plan
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'unleash-dev-plan'
-      publishLocation: 'Container'
+  - publish: $(System.DefaultWorkingDirectory)
+    artifact: unleash-dev-plan
+  # - task: PublishBuildArtifacts@1
+  #   inputs:
+  #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+  #     ArtifactName: 'unleash-dev-plan'
+  #     publishLocation: 'Container'
 
 - job: waitForValidation
   pool: server
@@ -112,14 +102,13 @@ jobs:
         targetType: 'inline'
         script: |
           chmod -R a+x ./.terraform/providers/*
-        workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/terraform-review-ci/drop/review/unleash-app'
+        workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
     - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/terraform-review-ci/drop/review/unleash-app'
+        workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
         commandOptions: '-input=false tfplan'
         environmentServiceNameAzureRM: '$(backendServiceArm)'
   dependsOn: waitForValidation
-  # dependsOn: Plan
   condition: succeeded()  
