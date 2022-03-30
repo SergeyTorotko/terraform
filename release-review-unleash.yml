@@ -140,7 +140,7 @@ stages:
       inputs:
         Contents: |
           **/modules/**
-          **/review/**
+          **/$()/**
         TargetFolder: '$(tf_folder)'
         #TargetFolder: "$(build.artifactstagingdirectory)/terraform"
 
