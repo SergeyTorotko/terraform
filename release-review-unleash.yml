@@ -116,7 +116,7 @@ trigger:
   - develop # Define trigger branch
 
 variables:
-- group: 'terraform.prod.unleash'
+- group: 'terraform.prod.unleash' # Define variables group name
 - name: tf_folder
   value: '$(build.artifactstagingdirectory)/terraform'
 - name: env
