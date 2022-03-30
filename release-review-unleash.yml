@@ -117,6 +117,12 @@ trigger:
 
 variables:
 - group: 'terraform.prod.unleash'
+- name: tf_folder
+  value: '$(build.artifactstagingdirectory)/terraform'
+- name: env
+  value: 'review'
+- name: app
+  value: 'unleash-app'
 
 pool:
   vmImage: ubuntu-latest
@@ -133,12 +139,13 @@ stages:
         Contents: |
           **/modules/**
           **/review/**
-        TargetFolder: "$(build.artifactstagingdirectory)/terraform"
+        TargetFolder: '$(tf_folder)'
+        #TargetFolder: "$(build.artifactstagingdirectory)/terraform"
 
     - task: replacetokens@5
       inputs:
-        # rootDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
-        rootDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
+        rootDirectory: '$(tf_folder)/$(env)/$(app)'
+        #rootDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
         targetFiles: 'terraform.tfvars'
         encoding: 'auto'
         tokenPattern: 'default'
@@ -159,7 +166,8 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
+        workingDirectory: '$(tf_folder)/$(env)/$(app)'
+        #workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
         backendServiceArm: '$(backendServiceArm)'
         backendAzureRmResourceGroupName: '$(backendAzureRmResourceGroupName)'
         backendAzureRmStorageAccountName: '$(backendAzureRmStorageAccountName)'
@@ -169,15 +177,18 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'validate'
-        workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
+        workingDirectory: '$(tf_folder)/$(env)/$(app)'
+        #workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
     - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
+        workingDirectory: '$(tf_folder)/$(env)/$(app)'
+        #workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
         commandOptions: '-out=tfplan -input=false'
         environmentServiceNameAzureRM: '$(backendServiceArm)'
-    - publish: '$(build.artifactstagingdirectory)/terraform'
+    # - publish: '$(build.artifactstagingdirectory)/terraform'
+    - publish: '$(tf_folder)'
       artifact: unleash-dev-plan
 
 - stage: Deploy
@@ -208,14 +219,14 @@ stages:
           targetType: 'inline'
           script: |
             chmod -R a+x ./.terraform/providers/*
-          workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
+          workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/$(env)/$(app)'
           # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
 
       - task: TerraformTaskV2@2
         inputs:
           provider: 'azurerm'
           command: 'apply'
-          workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
+          workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/$(env)/$(app)'
           # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
           commandOptions: '-input=false tfplan'
           environmentServiceNameAzureRM: '$(backendServiceArm)'
