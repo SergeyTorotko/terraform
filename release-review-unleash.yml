@@ -123,6 +123,8 @@ variables:
   value: 'review'
 - name: app
   value: 'unleash-app'
+- name: artifact_name
+  value: '$(app)-$(enc)-artif'
 
 pool:
   vmImage: ubuntu-latest
@@ -189,7 +191,8 @@ stages:
         environmentServiceNameAzureRM: '$(backendServiceArm)'
     # - publish: '$(build.artifactstagingdirectory)/terraform'
     - publish: '$(tf_folder)'
-      artifact: unleash-dev-plan
+      #artifact: unleash-dev-plan
+      artifact: $(artifact_name)
 
 - stage: Deploy
   jobs:
@@ -209,7 +212,8 @@ stages:
     displayName: Deploy Unleash App Infrastructure
     steps:
       - download: current
-        artifact: unleash-dev-plan
+        #artifact: unleash-dev-plan
+        artifact: $(artifact_name)
       - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
         displayName: "Install terraform"
         inputs:
@@ -219,14 +223,14 @@ stages:
           targetType: 'inline'
           script: |
             chmod -R a+x ./.terraform/providers/*
-          workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/$(env)/$(app)'
+          workingDirectory: '$(PIPELINE.WORKSPACE)/$(artifact_name)/$(env)/$(app)'
           # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
 
       - task: TerraformTaskV2@2
         inputs:
           provider: 'azurerm'
           command: 'apply'
-          workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/$(env)/$(app)'
+          workingDirectory: '$(PIPELINE.WORKSPACE)/$(artifact_name)/$(env)/$(app)'
           # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
           commandOptions: '-input=false tfplan'
           environmentServiceNameAzureRM: '$(backendServiceArm)'
