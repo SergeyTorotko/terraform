@@ -59,7 +59,7 @@ jobs:
       provider: 'azurerm'
       command: 'plan'
       workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
-      commandOptions: '-out=tfplan -input=false -lock=false'
+      commandOptions: '-out=tfplan -input=false'
       environmentServiceNameAzureRM: '$(backendServiceArm)'
   - publish: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop'
     artifact: unleash-dev-plan
