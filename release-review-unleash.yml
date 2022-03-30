@@ -1,11 +1,119 @@
-resources:
- pipelines:
-   - pipeline: terraform-review-ci
-     source: Terraform - Review
-     trigger:
-      branches:
-        include:
-        - develop
+# resources:
+#  pipelines:
+#    - pipeline: terraform-review-ci
+#      source: Terraform - Review
+#      trigger:
+#       branches:
+#         include:
+#         - develop
+
+# variables:
+# - group: 'terraform.prod.unleash'
+
+# pool:
+#   vmImage: ubuntu-latest
+
+# jobs:
+# - job: Plan
+#   displayName: Plan Unleash App Infrastructure
+#   steps:
+#   - download: terraform-review-ci
+#     artifact: drop
+#   - task: replacetokens@5
+#     inputs:
+#       # rootDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
+#       rootDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+#       targetFiles: 'terraform.tfvars'
+#       encoding: 'auto'
+#       tokenPattern: 'default'
+#       writeBOM: true
+#       actionOnMissing: 'fail'
+#       keepToken: false
+#       actionOnNoFiles: 'fail'
+#       enableTransforms: false
+#       enableRecursion: false
+#       useLegacyPattern: false
+#       useLegacyEmptyFeature: false
+#       enableTelemetry: false
+#   - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+#     displayName: "Install terraform"
+#     inputs:
+#       terraformVersion: "1.1.7"
+#   - task: TerraformTaskV2@2
+#     inputs:
+#       provider: 'azurerm'
+#       command: 'init'
+#       workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+#       backendServiceArm: '$(backendServiceArm)'
+#       backendAzureRmResourceGroupName: '$(backendAzureRmResourceGroupName)'
+#       backendAzureRmStorageAccountName: '$(backendAzureRmStorageAccountName)'
+#       backendAzureRmContainerName: '$(backendAzureRmContainerName)'
+#       backendAzureRmKey: '$(backendAzureRmKey)'
+#   - task: TerraformTaskV2@2
+#     inputs:
+#       provider: 'azurerm'
+#       command: 'validate'
+#       workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+#   - task: TerraformTaskV2@2
+#     inputs:
+#       provider: 'azurerm'
+#       command: 'plan'
+#       workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+#       commandOptions: '-out=tfplan -input=false -lock=false'
+#       environmentServiceNameAzureRM: '$(backendServiceArm)'
+#   - publish: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop'
+#     artifact: unleash-dev-plan
+
+# - job: waitForValidation
+#   pool: server
+#   displayName: Wait for validation  
+#   timeoutInMinutes: 4320 # job times out in 3 days
+#   steps:   
+#   - task: ManualValidation@0
+#     timeoutInMinutes: 1440 # task times out in 1 day
+#     inputs:
+#         notifyUsers: |
+#             v.dedyulya@itransition.com
+#         instructions: 'Please validate the build configuration and resume'
+#         onTimeout: 'reject'
+#   dependsOn: Plan
+
+# - job: Deploy
+#   displayName: Deploy Unleash App Infrastructure
+#   steps:
+#     - download: current
+#       artifact: unleash-dev-plan
+#     # - task: DownloadBuildArtifacts@1
+#     #   inputs:
+#     #    buildType: 'current'
+#     #    downloadType: 'single'
+#     #    artifactName: 'unleash-dev-plan'
+#     #    downloadPath: '$(System.ArtifactsDirectory)'
+#     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+#       displayName: "Install terraform"
+#       inputs:
+#         terraformVersion: "1.1.7"
+#     - task: Bash@3
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+#           chmod -R a+x ./.terraform/providers/*
+#         workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
+#         # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
+
+#     - task: TerraformTaskV2@2
+#       inputs:
+#         provider: 'azurerm'
+#         command: 'apply'
+#         workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
+#         # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
+#         commandOptions: ' -lock=false -input=false tfplan'
+#         environmentServiceNameAzureRM: '$(backendServiceArm)'
+#   dependsOn: waitForValidation
+#   condition: succeeded()  
+
+trigger:
+  - develop
 
 variables:
 - group: 'terraform.prod.unleash'
@@ -13,101 +121,104 @@ variables:
 pool:
   vmImage: ubuntu-latest
 
-jobs:
-- job: Plan
-  displayName: Plan Unleash App Infrastructure
-  steps:
-  - download: terraform-review-ci
-    artifact: drop
-  - task: replacetokens@5
-    inputs:
-      # rootDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
-      rootDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
-      targetFiles: 'terraform.tfvars'
-      encoding: 'auto'
-      tokenPattern: 'default'
-      writeBOM: true
-      actionOnMissing: 'fail'
-      keepToken: false
-      actionOnNoFiles: 'fail'
-      enableTransforms: false
-      enableRecursion: false
-      useLegacyPattern: false
-      useLegacyEmptyFeature: false
-      enableTelemetry: false
-  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-    displayName: "Install terraform"
-    inputs:
-      terraformVersion: "1.1.7"
-  - task: TerraformTaskV2@2
-    inputs:
-      provider: 'azurerm'
-      command: 'init'
-      workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
-      backendServiceArm: '$(backendServiceArm)'
-      backendAzureRmResourceGroupName: '$(backendAzureRmResourceGroupName)'
-      backendAzureRmStorageAccountName: '$(backendAzureRmStorageAccountName)'
-      backendAzureRmContainerName: '$(backendAzureRmContainerName)'
-      backendAzureRmKey: '$(backendAzureRmKey)'
-  - task: TerraformTaskV2@2
-    inputs:
-      provider: 'azurerm'
-      command: 'validate'
-      workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
-  - task: TerraformTaskV2@2
-    inputs:
-      provider: 'azurerm'
-      command: 'plan'
-      workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
-      commandOptions: '-out=tfplan -input=false -lock=false'
-      environmentServiceNameAzureRM: '$(backendServiceArm)'
-  - publish: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop'
-    artifact: unleash-dev-plan
+stages:
+- stage: Plan
+  jobs:
+  - job: Plan
+    displayname: Plan Unleash App Infrastructure
+    steps:
+    - task: CopyFiles@2
+      displayName: "Copy Files to: $(build.artifactstagingdirectory)/terraform"
+      inputs:
+        Contents: |
+          **/modules/**
+          **/review/**
+        TargetFolder: "$(build.artifactstagingdirectory)/terraform"
 
-- job: waitForValidation
-  pool: server
-  displayName: Wait for validation  
-  timeoutInMinutes: 4320 # job times out in 3 days
-  steps:   
-  - task: ManualValidation@0
-    timeoutInMinutes: 1440 # task times out in 1 day
-    inputs:
-        notifyUsers: |
-            v.dedyulya@itransition.com
-        instructions: 'Please validate the build configuration and resume'
-        onTimeout: 'reject'
-  dependsOn: Plan
-
-- job: Deploy
-  displayName: Deploy Unleash App Infrastructure
-  steps:
-    - download: current
-      artifact: unleash-dev-plan
-    # - task: DownloadBuildArtifacts@1
-    #   inputs:
-    #    buildType: 'current'
-    #    downloadType: 'single'
-    #    artifactName: 'unleash-dev-plan'
-    #    downloadPath: '$(System.ArtifactsDirectory)'
+    - task: replacetokens@5
+      inputs:
+        # rootDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
+        rootDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+        targetFiles: 'terraform.tfvars'
+        encoding: 'auto'
+        tokenPattern: 'default'
+        writeBOM: true
+        actionOnMissing: 'fail'
+        keepToken: false
+        actionOnNoFiles: 'fail'
+        enableTransforms: false
+        enableRecursion: false
+        useLegacyPattern: false
+        useLegacyEmptyFeature: false
+        enableTelemetry: false
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-      displayName: "Install terraform"
+      DisplayName: "Install terraform"
       inputs:
         terraformVersion: "1.1.7"
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          chmod -R a+x ./.terraform/providers/*
-        workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
-        # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
-
     - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
-        command: 'apply'
-        workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
-        # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
-        commandOptions: ' -lock=false -input=false tfplan'
+        command: 'init'
+        workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+        backendServiceArm: '$(backendServiceArm)'
+        backendAzureRmResourceGroupName: '$(backendAzureRmResourceGroupName)'
+        backendAzureRmStorageAccountName: '$(backendAzureRmStorageAccountName)'
+        backendAzureRmContainerName: '$(backendAzureRmContainerName)'
+        backendAzureRmKey: '$(backendAzureRmKey)'
+    - task: TerraformTaskV2@2
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+        workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+    - task: TerraformTaskV2@2
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+        commandOptions: '-out=tfplan -input=false -lock=false'
         environmentServiceNameAzureRM: '$(backendServiceArm)'
-  dependsOn: waitForValidation
-  condition: succeeded()  
+    - publish: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+      artifact: unleash-dev-plan
+
+- stage: Deploy
+  jobs:
+  - job: waitForValidation
+    pool: server
+    displayName: Wait for validation  
+    timeoutInMinutes: 4320 # job times out in 3 days
+    steps:   
+    - task: ManualValidation@0
+      timeoutInMinutes: 1440 # task times out in 1 day
+      inputs:
+          notifyUsers: |
+              v.dedyulya@itransition.com
+          instructions: 'Please validate the build configuration and resume'
+          onTimeout: 'reject'
+  - job: Deploy
+    displayName: Deploy Unleash App Infrastructure
+    steps:
+      - download: current
+        artifact: unleash-dev-plan
+      - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+        displayName: "Install terraform"
+        inputs:
+          terraformVersion: "1.1.7"
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            chmod -R a+x ./.terraform/providers/*
+          workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
+          # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
+
+      - task: TerraformTaskV2@2
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
+          # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
+          commandOptions: '-input=false tfplan'
+          environmentServiceNameAzureRM: '$(backendServiceArm)'
+    dependsOn: waitForValidation
+    condition: succeeded()
+  dependsOn: Plan  
