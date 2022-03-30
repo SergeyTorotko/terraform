@@ -138,7 +138,7 @@ stages:
     - task: replacetokens@5
       inputs:
         # rootDirectory: '$(System.ArtifactsDirectory)/drop/review/unleash-app'
-        rootDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+        rootDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
         targetFiles: 'terraform.tfvars'
         encoding: 'auto'
         tokenPattern: 'default'
@@ -159,7 +159,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+        workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
         backendServiceArm: '$(backendServiceArm)'
         backendAzureRmResourceGroupName: '$(backendAzureRmResourceGroupName)'
         backendAzureRmStorageAccountName: '$(backendAzureRmStorageAccountName)'
@@ -169,15 +169,15 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'validate'
-        workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+        workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
     - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+        workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
         commandOptions: '-out=tfplan -input=false -lock=false'
         environmentServiceNameAzureRM: '$(backendServiceArm)'
-    - publish: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+    - publish: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
       artifact: unleash-dev-plan
 
 - stage: Deploy
