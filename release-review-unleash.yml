@@ -125,7 +125,7 @@ stages:
 - stage: Plan
   jobs:
   - job: Plan
-    displayname: Plan Unleash App Infrastructure
+    # displayname: Plan Unleash App Infrastructure
     steps:
     - task: CopyFiles@2
       displayName: "Copy Files to: $(build.artifactstagingdirectory)/terraform"
@@ -152,7 +152,7 @@ stages:
         useLegacyEmptyFeature: false
         enableTelemetry: false
     - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-      DisplayName: "Install terraform"
+      # DisplayName: "Install terraform"
       inputs:
         terraformVersion: "1.1.7"
     - task: TerraformTaskV2@2
