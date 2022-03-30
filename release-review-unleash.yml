@@ -124,7 +124,7 @@ variables:
 - name: app
   value: 'unleash-app'
 - name: artifact_name
-  value: '$(app)-$(env)-artif'
+  value: '$(app)-$(env)-artifact'
 
 pool:
   vmImage: ubuntu-latest
