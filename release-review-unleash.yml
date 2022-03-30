@@ -168,11 +168,11 @@ stages:
         command: 'init'
         workingDirectory: '$(tf_folder)/$(env)/$(app)'
         #workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
-        backendServiceArm: '$(backendServiceArm)'
-        backendAzureRmResourceGroupName: '$(backendAzureRmResourceGroupName)'
-        backendAzureRmStorageAccountName: '$(backendAzureRmStorageAccountName)'
-        backendAzureRmContainerName: '$(backendAzureRmContainerName)'
-        backendAzureRmKey: '$(backendAzureRmKey)'
+        backendServiceArm: 'Azure subscription 1(5ccd862b-7710-4536-85dd-a425a1b28173)'
+        backendAzureRmResourceGroupName: 'Shared'
+        backendAzureRmStorageAccountName: 'tfstatestore2134'
+        backendAzureRmContainerName: 'terraform'
+        backendAzureRmKey: '$(env)/$(app)/terraform.tfstate'
     - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
