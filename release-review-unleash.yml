@@ -177,7 +177,7 @@ stages:
         workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
         commandOptions: '-out=tfplan -input=false -lock=false'
         environmentServiceNameAzureRM: '$(backendServiceArm)'
-    - publish: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
+    - publish: '$(build.artifactstagingdirectory)/terraform'
       artifact: unleash-dev-plan
 
 - stage: Deploy
