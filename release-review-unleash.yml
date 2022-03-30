@@ -59,7 +59,7 @@
 #       provider: 'azurerm'
 #       command: 'plan'
 #       workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
-#       commandOptions: '-out=tfplan -input=false -lock=false'
+#       commandOptions: '-out=tfplan -input=false'
 #       environmentServiceNameAzureRM: '$(backendServiceArm)'
 #   - publish: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop'
 #     artifact: unleash-dev-plan
@@ -107,7 +107,7 @@
 #         command: 'apply'
 #         workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
 #         # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
-#         commandOptions: ' -lock=false -input=false tfplan'
+#         commandOptions: '-input=false tfplan'
 #         environmentServiceNameAzureRM: '$(backendServiceArm)'
 #   dependsOn: waitForValidation
 #   condition: succeeded()  
@@ -175,7 +175,7 @@ stages:
         provider: 'azurerm'
         command: 'plan'
         workingDirectory: '$(build.artifactstagingdirectory)/terraform/review/unleash-app'
-        commandOptions: '-out=tfplan -input=false -lock=false'
+        commandOptions: '-out=tfplan -input=false'
         environmentServiceNameAzureRM: '$(backendServiceArm)'
     - publish: '$(build.artifactstagingdirectory)/terraform'
       artifact: unleash-dev-plan
