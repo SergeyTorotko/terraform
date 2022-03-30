@@ -131,10 +131,10 @@ pool:
 
 stages:
 - stage: Plan 
-  displayName: 'Plan $(app)-$(env) Infrastructure'
+  displayName: 'Plan Infrastructure'
   jobs:
   - job: Plan
-    displayName: 'Plan $(app)-$(env) Infrastructure'
+    displayName: 'Plan Infrastructure'
     steps:
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(tf_folder)'
@@ -192,7 +192,7 @@ stages:
       artifact: $(artifact_name)
 
 - stage: Deploy
-  displayName: 'Deploy $(app)-$(env) Infrastructure'
+  displayName: 'Deploy Infrastructure'
   jobs:
   - job: waitForValidation
     pool: server
@@ -208,7 +208,7 @@ stages:
           instructions: 'Please validate the build configuration and resume'
           onTimeout: 'reject'
   - job: Deploy
-    displayName: 'Deploy $(app)-$(env) Infrastructure'
+    displayName: 'Deploy Infrastructure'
     steps:
       - download: current
         artifact: $(artifact_name)
