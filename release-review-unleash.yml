@@ -61,7 +61,7 @@ jobs:
       workingDirectory: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
       commandOptions: '-out=tfplan -input=false -lock=false'
       environmentServiceNameAzureRM: '$(backendServiceArm)'
-  - publish: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop/review/unleash-app'
+  - publish: '$(PIPELINE.WORKSPACE)/terraform-review-ci/drop'
     artifact: unleash-dev-plan
 
 - job: waitForValidation
@@ -98,14 +98,14 @@ jobs:
         targetType: 'inline'
         script: |
           chmod -R a+x ./.terraform/providers/*
-        workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan'
+        workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
         # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
 
     - task: TerraformTaskV2@2
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan'
+        workingDirectory: '$(PIPELINE.WORKSPACE)/unleash-dev-plan/review/unleash-app'
         # workingDirectory: '$(System.ArtifactsDirectory)/unleash-dev-plan/review/unleash-app'
         commandOptions: '-input=false tfplan'
         environmentServiceNameAzureRM: '$(backendServiceArm)'
